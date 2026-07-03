@@ -1,0 +1,24 @@
+# Data + cache are reproducible from the pull scripts; don't commit them.
+# (The written briefs and the self-contained deck in outputs/ ARE committed —
+# they're the deliverables; figures regenerate and are embedded in the deck.)
+data/cache/
+data/raw/
+data/processed/
+outputs/figures/
+
+# Local tool config
+.claude/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
