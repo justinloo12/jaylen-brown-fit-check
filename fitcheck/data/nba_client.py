@@ -276,6 +276,24 @@ def league_player_tracking(season: str, *, pt_measure: str = "Possessions",
                      params={"season": season, "pt": pt_measure}, force=force)
 
 
+def player_shot_defend(player_id: int, season: str, *, team_id: int = 0,
+                       force: bool = False) -> pd.DataFrame:
+    """Defended-shot tracking: FG% shooters post against this defender vs
+    their normal FG%, by zone (PCT_PLUSMINUS < 0 = shooters do worse)."""
+    def _fetch() -> pd.DataFrame:
+        from nba_api.stats.endpoints import playerdashptshotdefend
+        return _get(
+            playerdashptshotdefend.PlayerDashPtShotDefend,
+            player_id=player_id,
+            team_id=team_id,
+            season=season,
+            season_type_all_star=config.SEASON_TYPE,
+        )
+    return cached_df("player_shot_defend", _fetch,
+                     params={"player_id": player_id, "season": season},
+                     force=force)
+
+
 def player_passing(player_id: int, season: str, *, team_id: int = 0,
                    force: bool = False) -> pd.DataFrame:
     """Passes made/received, touches, points created by assists — for

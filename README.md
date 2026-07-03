@@ -66,6 +66,8 @@ document:
   20-player max-contract market: TS% vs usage vs pay
 - [outputs/flow_test.md](outputs/flow_test.md) — the ball-stopping claim,
   measured: Brown is p1–p2 in passes-per-touch league-wide
+- [outputs/defense_check.md](outputs/defense_check.md) — a proposed angle the
+  data refused: Brown's defense *improved* in 25-26; the case leaves it out
 - [outputs/report.md](outputs/report.md) — the neutral auto-generated summary
 
 Two quantitative pieces support the return side:
@@ -117,7 +119,8 @@ scripts/                      # the pipeline, in order
 ├── 10_lottery_value.py       # flattened-lottery expected value
 ├── 11_tatum_baseline.py      # post-trade: Tatum through the same lens
 ├── 12_efficiency_comps.py    # Brown vs the max-contract market (TS%/USG/pay)
-└── 13_flow_test.py           # ball-stopping measured: sec/touch, passes/touch
+├── 13_flow_test.py           # ball-stopping measured: sec/touch, passes/touch
+└── 14_defense_check.py       # 'declining defense' tested 3 ways — refuted
 
 tests/                        # unit tests (stdlib unittest)
 notebooks/                    # exploration

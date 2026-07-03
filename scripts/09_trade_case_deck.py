@@ -263,6 +263,10 @@ at Brown's price of a win — per pick.</p>
     <li><b>Brown-led lineups won.</b> Without Tatum: +9.8 (24-25), +4.8 (25-26).
     "Empty stats" is not supported; "impact fades vs quality opponents in 25-26" is.</li>
     <li><b>Clutch favors Brown</b> — .632 TS in 24-25. Concede it up front.</li>
+    <li><b>Do not argue defense.</b> We tested 'declining defense' three ways
+    and it failed: matchup data shows shooters hit <b>−4.2%</b> vs their norm
+    against Brown in 25-26 (−5.7% at the rim), his best mark of the window,
+    at career-high usage. Defense is closer to a point in his favor.</li>
     <li><b>Holding the ball isn't damning by itself</b> — SGA and Dončić live
     in the same hold-time region and are MVPs. The chain needs §2: it's
     stop-the-ball <i>plus</i> bad terminations that indicts. If §2 falls, §1
