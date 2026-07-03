@@ -9,6 +9,10 @@ outputs/figures/
 # Local tool config
 .claude/
 
+# Secrets / local environment
+.env
+.env.*
+
 # Python
 __pycache__/
 *.py[cod]
