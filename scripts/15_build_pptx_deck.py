@@ -25,12 +25,13 @@ HEAD = "Cambria"; BODY = "Calibri"
 
 W, H = 13.333, 7.5
 ASPECT = {"diet": 2.279, "onoff": 1.559, "eff": 2.424, "picks": 2.418,
-          "solo": 2.431}
+          "solo": 2.431, "identity": 2.76}
 FILES = {"diet": "case_for_moving_on.png",
          "onoff": "with_without_net_2025-26.png",
          "eff": "efficiency_comps.png",
          "picks": "pick_value.png",
-         "solo": "tatum_first_option.png"}
+         "solo": "tatum_first_option.png",
+         "identity": "three_point_identity.png"}
 
 
 def C(hexs):
@@ -216,7 +217,25 @@ txt(s, 0.62, 6.1, 12.1, 0.75, [[("This is the cleanest, least-confounded "
      "color": DARK})]], line_spacing=1.1)
 footer(s)
 
-# ---------------------------------------------------------------- 4 CONTINGENT
+# ---------------------------------------------------------------- 4 GAME PLAN
+s = new()
+eyebrow(s, "The game plan")
+title(s, "Boston's identity is math — and Brown was its one outlier")
+image(s, "identity", 0.7, 1.7, 11.9, 4.35)
+txt(s, 0.62, 6.05, 12.1, 1.0, [
+    [("#1 · #1 · #4 in three-point volume and a top-2 offense all three "
+      "years — threes returned 1.10 points per shot vs 0.97 for twos. ",
+      {"size": 13, "color": INK}),
+     ("Brown: last of 7 perimeter players in 3PT rate (.263 vs team .467), "
+      "first in long twos. ", {"size": 13, "bold": True, "color": RED}),
+     ("A shot-mix problem, not a finishing one (his 1.046 PPS vs 1.101) — "
+      "and honestly priced, swapping his diet for George's is roughly a "
+      "wash after creation and aging discounts. The offense case supports; "
+      "it doesn't headline.", {"size": 13, "color": MUTED})],
+], line_spacing=1.15)
+footer(s)
+
+# ---------------------------------------------------------------- 5 CONTINGENT
 s = new()
 eyebrow(s, "Contingent value")
 title(s, "The production needed Tatum and White to prop it up")
@@ -250,12 +269,13 @@ eyebrow(s, "The hierarchy test")
 title(s, "First-option Tatum beat load-sharing — on the floor and in the standings")
 image(s, "solo", 0.5, 1.7, 7.4, 3.2)
 tx = 8.3
-rows5 = [("13-3 (+11.8) when Brown sat", GREEN,
-         "16 games in 2024-25. Full 2×2: Tatum-led lineups +11.9 > "
-         "Brown-led +9.8 > together +7.6 > neither +3.5 (control)."),
-        ("Usage up, efficiency flat", DARK,
-         "Tatum without Brown: 28.8 pts / 7.8 reb on .584 TS at 34.5% "
-         "usage — he absorbed +4.1 usage points and lost nothing."),
+rows5 = [("25-4 (86.2%) when Brown sat", GREEN,
+         "29 games, 2023-present, +13.3/game — including 10-0 in the "
+         "title year. Both healthy: 73.7%. Lineups: Tatum-led +11.9 > "
+         "together +7.6 > neither +3.5 (control)."),
+        ("Usage up, efficiency mostly holds", DARK,
+         "Pooled: 28.0/7.9/5.7 at 34.6% usage (+4.7 pts of usage), TS "
+         ".593 → .572 — a modest efficiency dip, printed, not hidden."),
         ("Worth ~5-7 wins a season", GOLD,
          "Projection, not observation: the +4.3 lineup gap, shrunk 40-60% "
          "for bench/garbage contamination → +1.7-2.6 team net → +4.7-7.0 "
@@ -274,9 +294,10 @@ txt(s, 0.62, 5.05, 7.4, 1.3, [[("Tatum's projected solo season: ",
     ("— stated as a range from the observed 16-game sample and a documented "
      "usage-tradeoff model, because false precision is how decks lie.",
      {"size": 13, "color": MUTED})]], line_spacing=1.12)
-txt(s, 0.62, 6.55, 12.1, 0.45, [[("Honesty flag: Brown's own 7-game solo cell "
-    "was the best in the matrix (6-1, +15.8) — small sample, printed anyway. "
-    "See slide 8.", {"size": 11.5, "italic": True, "color": MUTED})]],
+txt(s, 0.62, 6.55, 12.1, 0.45, [[("Honesty flags: Wilson intervals on the "
+    "win rates overlap — claim is 'no evidence of drop-off,' not proof. And "
+    "Brown's own 7-game solo cell was the matrix's best (6-1, +15.8). See "
+    "slide 9.", {"size": 11.5, "italic": True, "color": MUTED})]],
     line_spacing=1.05)
 footer(s)
 
