@@ -1,0 +1,42 @@
+name: Rebuild web deck
+
+# Regenerates outputs/trade_case.html whenever the deck script or its
+# embedded figures change — so text edits made directly on github.com
+# publish to the live GitHub Pages URL automatically.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/09_trade_case_deck.py"
+      - "outputs/figures/**"
+      - "fitcheck/config.py"
+
+concurrency:
+  group: rebuild-deck
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pillow
+      - run: python scripts/09_trade_case_deck.py
+      - name: Commit rebuilt deck if changed
+        run: |
+          if ! git diff --quiet outputs/trade_case.html; then
+            git config user.name "deck-rebuild-bot"
+            git config user.email "actions@github.com"
+            git add outputs/trade_case.html
+            git commit -m "Rebuild trade_case.html from deck script"
+            git pull --rebase origin main
+            git push origin main
+          else
+            echo "No changes to the deck output."
+          fi

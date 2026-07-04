@@ -1,10 +1,10 @@
 # Data + cache are reproducible from the pull scripts; don't commit them.
-# (The written briefs and the self-contained deck in outputs/ ARE committed —
-# they're the deliverables; figures regenerate and are embedded in the deck.)
+# (The written briefs, the self-contained deck, and the figures in outputs/
+# ARE committed — figures must be in-repo so the rebuild-deck workflow can
+# embed them when the deck script is edited on github.com.)
 data/cache/
 data/raw/
 data/processed/
-outputs/figures/
 
 # Local tool config
 .claude/
