@@ -70,6 +70,10 @@ document:
   three-point game plan proven with league ranks (2023-24 → 2025-26), Brown
   as the within-team shot-mix outlier (his finishing is fine; his mix isn't),
   and a labeled diet-swap projection whose honest range is small
+- [outputs/wing_redistribution.md](outputs/wing_redistribution.md) — Brown's
+  21.7 FGA/g spread across the other wings (incl. George) at each receiver's
+  own mix: naive ceiling vs usage-adjusted estimate vs George-only 1-for-1,
+  with the double-counting warning against the hierarchy projection
 - [outputs/live_ball_turnovers.md](outputs/live_ball_turnovers.md) — every
   Brown/Tatum turnover classified live vs dead from full play-by-play, and
   the opponent points each live one surrendered (Brown's rate was *lower*
@@ -139,7 +143,9 @@ scripts/                      # the pipeline, in order
 ├── 15_build_pptx_deck.py     # the case as a PowerPoint deck
 ├── 16_tatum_first_option.py  # 2×2 configuration matrix + solo-Tatum projection
 ├── 17_live_ball_turnovers.py # live-ball TOs priced from full play-by-play
-└── 18_defense_roles.py       # defense by role: matchups, hustle, P&R, transition
+├── 18_defense_roles.py       # defense by role: matchups, hustle, P&R, transition
+├── 19_three_point_identity.py # the 3PT identity + Brown's diet-swap projection
+└── 20_wing_redistribution.py # Brown's volume spread across the other wings
 
 tests/                        # unit tests (stdlib unittest)
 notebooks/                    # exploration
