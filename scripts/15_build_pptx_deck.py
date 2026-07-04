@@ -248,7 +248,10 @@ txt(s, 0.62, 6.0, 12.1, 1.05, [
      ("Usage-adjusted: roughly a wash (−0.7 to +0.9 wins). And the George-"
       "only 1-for-1 is negative — spreading beats concentrating. ",
       {"size": 13, "color": INK}),
-     ("Combined with the hierarchy case: ~+4 to +8 wins total — the two "
+     ("The real upside isn't in this mechanical model — it's Tatum's "
+      "creation (5.7-6.1 ast, .498 3PT-rate gravity) upgrading the shots "
+      "these wings get, and that effect is already measured in the +11.9 "
+      "Tatum-led lineups. Combined honest range: ~+4 to +8 wins — the "
       "projections overlap and do NOT stack.", {"size": 13, "bold": True,
       "color": DARK})],
 ], line_spacing=1.15)
