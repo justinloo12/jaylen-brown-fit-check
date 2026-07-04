@@ -15,7 +15,7 @@ from pptx.enum.shapes import MSO_SHAPE
 
 ROOT = Path(__file__).resolve().parent.parent
 FIG = ROOT / "outputs" / "figures"
-OUT = ROOT / "outputs" / "Fit_Check_Jaylen_Brown.pptx"
+OUT = ROOT / "outputs" / "Breaking_Down_The_Jaylen_Brown_Trade.pptx"
 
 # palette — Celtics
 GREEN = "007A33"; DARK = "0A2A1A"; GOLD = "BA9653"; INK = "20232A"
@@ -25,13 +25,14 @@ HEAD = "Cambria"; BODY = "Calibri"
 
 W, H = 13.333, 7.5
 ASPECT = {"diet": 2.279, "onoff": 1.559, "eff": 2.424, "picks": 2.418,
-          "solo": 2.431, "identity": 2.76}
+          "solo": 2.431, "identity": 2.76, "redis": 2.48}
 FILES = {"diet": "case_for_moving_on.png",
          "onoff": "with_without_net_2025-26.png",
          "eff": "efficiency_comps.png",
          "picks": "pick_value.png",
          "solo": "tatum_first_option.png",
-         "identity": "three_point_identity.png"}
+         "identity": "three_point_identity.png",
+         "redis": "wing_redistribution.png"}
 
 
 def C(hexs):
@@ -142,9 +143,9 @@ dot(s, 0.62, 0.62, 0.34, fill=GOLD)
 txt(s, 1.05, 0.6, 10, 0.4, [[("BOSTON CELTICS  ·  FIT CHECK",
     {"color": "BCD3C6", "bold": True, "size": 13})]], space_after=0)
 txt(s, 0.62, 2.15, 12.1, 2.0, [
-    [("Did Jaylen Brown Fit", {"size": 46, "bold": True, "font": HEAD,
+    [("Breaking Down", {"size": 46, "bold": True, "font": HEAD,
       "color": WHITE})],
-    [("the Boston System?", {"size": 46, "bold": True, "font": HEAD,
+    [("the Jaylen Brown Trade", {"size": 46, "bold": True, "font": HEAD,
       "color": GOLD})],
 ], space_after=2, line_spacing=1.0)
 txt(s, 0.62, 4.35, 11.6, 1.0, [[(
@@ -235,7 +236,25 @@ txt(s, 0.62, 6.05, 12.1, 1.0, [
 ], line_spacing=1.15)
 footer(s)
 
-# ---------------------------------------------------------------- 5 CONTINGENT
+# ---------------------------------------------------------------- 5 SHOTS GO
+s = new()
+eyebrow(s, "Where the shots go")
+title(s, "Redistribute Brown's 21.7 shots to the wings — priced honestly")
+image(s, "redis", 0.9, 1.7, 11.5, 4.3)
+txt(s, 0.62, 6.0, 12.1, 1.05, [
+    [("Ceiling: +1.3 pts/g (~3.5 wins) if every wing's efficiency survived "
+      "the extra volume — it won't. ", {"size": 13, "bold": True,
+      "color": GREEN}),
+     ("Usage-adjusted: roughly a wash (−0.7 to +0.9 wins). And the George-"
+      "only 1-for-1 is negative — spreading beats concentrating. ",
+      {"size": 13, "color": INK}),
+     ("Combined with the hierarchy case: ~+4 to +8 wins total — the two "
+      "projections overlap and do NOT stack.", {"size": 13, "bold": True,
+      "color": DARK})],
+], line_spacing=1.15)
+footer(s)
+
+# ---------------------------------------------------------------- 6 CONTINGENT
 s = new()
 eyebrow(s, "Contingent value")
 title(s, "The production needed Tatum and White to prop it up")
@@ -297,7 +316,7 @@ txt(s, 0.62, 5.05, 7.4, 1.3, [[("Tatum's projected solo season: ",
 txt(s, 0.62, 6.55, 12.1, 0.45, [[("Honesty flags: Wilson intervals on the "
     "win rates overlap — claim is 'no evidence of drop-off,' not proof. And "
     "Brown's own 7-game solo cell was the matrix's best (6-1, +15.8). See "
-    "slide 9.", {"size": 11.5, "italic": True, "color": MUTED})]],
+    "slide 10.", {"size": 11.5, "italic": True, "color": MUTED})]],
     line_spacing=1.05)
 footer(s)
 
