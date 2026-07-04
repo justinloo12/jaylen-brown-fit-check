@@ -205,9 +205,9 @@ def _figure(tab: pd.DataFrame, sc: dict, go: dict, brown: dict) -> None:
     # Left: where the shots go.
     ax = axes[0]
     t = tab.sort_values("gain_fga")
-    names = list(t["player"]) + ["Jaylen Brown"]
-    vals = list(t["gain_fga"]) + [-brown["fga_pg"]]
-    colors = [GREEN] * len(t) + [RED]
+    names = list(t["player"])
+    vals = list(t["gain_fga"])
+    colors = [GREEN] * len(t)
     bars = ax.barh(names, vals, color=colors, height=0.62)
     for rect, v in zip(bars, vals):
         ax.annotate(f"{v:+.1f}",
