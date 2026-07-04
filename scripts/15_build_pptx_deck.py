@@ -24,11 +24,13 @@ RED = "B3403A"  # negative accent only
 HEAD = "Cambria"; BODY = "Calibri"
 
 W, H = 13.333, 7.5
-ASPECT = {"diet": 2.279, "onoff": 1.559, "eff": 2.424, "picks": 2.418}
+ASPECT = {"diet": 2.279, "onoff": 1.559, "eff": 2.424, "picks": 2.418,
+          "solo": 2.431}
 FILES = {"diet": "case_for_moving_on.png",
          "onoff": "with_without_net_2025-26.png",
          "eff": "efficiency_comps.png",
-         "picks": "pick_value.png"}
+         "picks": "pick_value.png",
+         "solo": "tatum_first_option.png"}
 
 
 def C(hexs):
@@ -245,40 +247,37 @@ footer(s)
 # ---------------------------------------------------------------- 5 HIERARCHY
 s = new()
 eyebrow(s, "The hierarchy test")
-title(s, "Tatum-led was the best version of the offense — together was the worst")
-engine = [("+11.9", "Tatum-led (Brown off)", "1,212 min · 2024-25", GREEN),
-          ("+9.8", "Brown-led (Tatum off)", "753 min · 2024-25", DARK),
-          ("+7.6", "the two together", "1,411 min · 2024-25", RED)]
-cw, gap = 3.83, 0.31
-for i, (big, lab, sub, col) in enumerate(engine):
-    x = 0.62 + i * (cw + gap)
-    card(s, x, 1.95, cw, 2.25)
-    txt(s, x + 0.28, 2.16, cw - 0.5, 0.9, [[(big, {"size": 42, "bold": True,
-        "font": HEAD, "color": col})]], space_after=0)
-    txt(s, x + 0.3, 3.1, cw - 0.55, 0.4, [[(lab, {"size": 14.5, "bold": True,
-        "color": DARK})]], space_after=0)
-    txt(s, x + 0.3, 3.47, cw - 0.55, 0.4, [[(sub, {"size": 12,
-        "color": MUTED})]], space_after=0)
-txt(s, 0.62, 4.55, 12.1, 0.4, [[("Net rating of five-man lineups, the healthy "
-    "season — first-option basketball beat load-sharing.", {"size": 13.5,
-    "bold": True, "color": DARK})]], space_after=0)
-rows5 = [("Tatum's diet IS the system", GREEN,
-          "Half his shots are threes (0.498 vs Brown's 0.262) and his "
-          "long-two rate is 0.059 vs Brown's 0.142. His self-creation "
-          "terminates in the anchor shot; Brown's terminated in the shot "
-          "the system avoids."),
-         ("Read the caveats before quoting", GOLD,
-          "'Led' minutes include bench-heavy and garbage-time units, and "
-          "2025-26 is an injury-season shard (204 Tatum-led minutes). The "
-          "2024-25 comparison is the clean one — and it still favors the "
-          "hierarchy.")]
-yy = 5.15
+title(s, "First-option Tatum beat load-sharing — on the floor and in the standings")
+image(s, "solo", 0.5, 1.7, 7.4, 3.2)
+tx = 8.3
+rows5 = [("13-3 (+11.8) when Brown sat", GREEN,
+         "16 games in 2024-25. Full 2×2: Tatum-led lineups +11.9 > "
+         "Brown-led +9.8 > together +7.6 > neither +3.5 (control)."),
+        ("Usage up, efficiency flat", DARK,
+         "Tatum without Brown: 28.8 pts / 7.8 reb on .584 TS at 34.5% "
+         "usage — he absorbed +4.1 usage points and lost nothing."),
+        ("Worth ~5-7 wins a season", GOLD,
+         "Projection, not observation: the +4.3 lineup gap, shrunk 40-60% "
+         "for bench/garbage contamination → +1.7-2.6 team net → +4.7-7.0 "
+         "wins. Assumptions documented in the memo.")]
+yy = 1.9
 for head, col, body in rows5:
-    dot(s, 0.7, yy + 0.04, 0.16, fill=col)
-    txt(s, 1.02, yy, 11.6, 0.85, [[(head + "  ", {"bold": True, "size": 13.5,
-        "color": DARK}), (body, {"size": 12.5, "color": MUTED})]],
-        line_spacing=1.08, space_after=2)
-    yy += 0.92
+    dot(s, tx, yy + 0.04, 0.16, fill=col)
+    txt(s, tx + 0.32, yy, 4.45, 1.25, [[(head, {"bold": True, "size": 14,
+        "color": DARK})], [(body, {"size": 12.2, "color": MUTED})]],
+        line_spacing=1.06, space_after=2)
+    yy += 1.44
+txt(s, 0.62, 5.05, 7.4, 1.3, [[("Tatum's projected solo season: ",
+    {"size": 13, "color": INK}),
+    ("27.2-28.8 pts · 7.8-8.9 reb · 5.1-6.2 ast · .566-.584 TS ",
+     {"size": 13, "bold": True, "color": GREEN}),
+    ("— stated as a range from the observed 16-game sample and a documented "
+     "usage-tradeoff model, because false precision is how decks lie.",
+     {"size": 13, "color": MUTED})]], line_spacing=1.12)
+txt(s, 0.62, 6.55, 12.1, 0.45, [[("Honesty flag: Brown's own 7-game solo cell "
+    "was the best in the matrix (6-1, +15.8) — small sample, printed anyway. "
+    "See slide 8.", {"size": 11.5, "italic": True, "color": MUTED})]],
+    line_spacing=1.05)
 footer(s)
 
 # ---------------------------------------------------------------- 6 CONTRACT
@@ -343,16 +342,18 @@ footer(s)
 s = new()
 eyebrow(s, "Where the case is weakest")
 title(s, "The counter-evidence, on the record")
-weak = [("The Tatum confound", GOLD,
-         "The 2025-26 with/without splits are contaminated by Tatum's injury "
-         "absence. The direction survives; the magnitude is uncertain."),
-        ("Win Shares are blunt", GOLD,
-         "Cost-per-WS is a crude value metric — it's used because it spans "
-         "both seasons and the full comp cohort, not because it's perfect."),
-        ("The market disagrees", RED,
-         "Media consensus graded the real trade for Philadelphia. Raw "
-         "production loss is real; this deck argues fit and optionality, "
-         "and says so openly.")]
+weak = [("Brown could carry", GOLD,
+         "His 7-game solo cell was the best in the 2024-25 matrix (6-1, "
+         "+15.8), and he carried 58 games alone in 2025-26 at 28.9 ppg "
+         "(36-22, +5.7). The man can be a first option — just not here."),
+        ("The defense is a real loss", GOLD,
+         "Brown took 19% of his defended possessions against opponents' #1 "
+         "options (Tatum: 8%) at better points-allowed, with -4.2/-5.7 "
+         "defended-FG% margins. Boston traded its toughest assignment."),
+        ("The turnover tax wasn't his", RED,
+         "Play-by-play says Brown's live-ball TO rate (1.75/36) was LOWER "
+         "than Tatum's (1.84) in 2024-25. That angle exonerates him — and "
+         "the media consensus graded the trade for Philadelphia.")]
 cw, gap = 3.83, 0.31
 for i, (head, col, body) in enumerate(weak):
     x = 0.62 + i * (cw + gap)
