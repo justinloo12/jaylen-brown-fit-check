@@ -536,6 +536,18 @@ def _companion_bullets() -> list[str]:
             "Brown's rate was LOWER when both were healthy. His "
             f"ball-dominant 2025-26: {b25['live']:.0f} live TOs, "
             f"{b25['pts_against']:.0f} pts surrendered.")
+    tp = config.PROCESSED_DIR / "three_point_identity_team.csv"
+    if tp.exists():
+        d = pd.read_csv(tp).set_index("season")
+        ranks = " / ".join(f"#{d.loc[s, 'fg3a_rank']:.0f}"
+                           for s in d.index)
+        L.append(
+            f"- **The system context** ([three_point_identity.md]"
+            f"(three_point_identity.md)): Boston ranked {ranks} in 3PA/game "
+            f"across {d.index[0]} → {d.index[-1]} — the movement-3 identity "
+            "this memo's configuration argument lives inside. Brown's shot "
+            "mix is the within-team outlier there; the diet-swap projection "
+            "(and its honest, small range) is in that memo's §3.")
     dr = config.PROCESSED_DIR / "defense_roles.csv"
     if dr.exists():
         d = pd.read_csv(dr).set_index(["player", "season"])

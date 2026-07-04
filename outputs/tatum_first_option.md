@@ -132,6 +132,7 @@ _One-stop summary so this memo stands alone; every figure is computed in the lin
 | Lineup net WITHOUT Tatum | +9.8 | +4.8 | outputs/report.md, this memo §2 |
 
 - **Live-ball turnovers** ([live_ball_turnovers.md](live_ball_turnovers.md)): 2024-25 Brown 1.75 live/36 (128 pts surrendered) vs Tatum 1.84 (139 pts) — Brown's rate was LOWER when both were healthy. His ball-dominant 2025-26: 131 live TOs, 182 pts surrendered.
+- **The system context** ([three_point_identity.md](three_point_identity.md)): Boston ranked #1 / #1 / #4 in 3PA/game across 2023-24 → 2025-26 — the movement-3 identity this memo's configuration argument lives inside. Brown's shot mix is the within-team outlier there; the diet-swap projection (and its honest, small range) is in that memo's §3.
 - **Defense by role** ([defense_roles.md](defense_roles.md)): Brown was the primary on-ball defender — 19% of his defended possessions on opponents' #1 options vs Tatum's 8% (2024-25), at slightly better points-allowed on those matchups. Boston has to replace that assignment coverage.
 
 Clutch: Brown's 2024-25 clutch TS was .632, better than Tatum (outputs/high_leverage_and_2028.md). Defense: improved in 2025-26 (outputs/defense_check.md). The trade case was never that Brown is bad; it's that the configuration in §2 was available.

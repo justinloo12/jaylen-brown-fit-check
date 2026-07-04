@@ -65,7 +65,11 @@ document:
 - [outputs/tatum_first_option.md](outputs/tatum_first_option.md) — the full
   2×2 configuration matrix (games and lineups, "neither" as control) and a
   clearly-labeled projection of Tatum as sole first option, with documented
-  shrinkage and ranges
+  shrinkage and ranges (§1b pools the availability split across 2023-26)
+- [outputs/three_point_identity.md](outputs/three_point_identity.md) — the
+  three-point game plan proven with league ranks (2023-24 → 2025-26), Brown
+  as the within-team shot-mix outlier (his finishing is fine; his mix isn't),
+  and a labeled diet-swap projection whose honest range is small
 - [outputs/live_ball_turnovers.md](outputs/live_ball_turnovers.md) — every
   Brown/Tatum turnover classified live vs dead from full play-by-play, and
   the opponent points each live one surrendered (Brown's rate was *lower*
