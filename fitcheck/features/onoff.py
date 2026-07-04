@@ -96,6 +96,26 @@ def pair_configuration_split(lineups: pd.DataFrame, a_id: int,
     return out.reset_index()
 
 
+def availability_cells(a_games: set, b_games: set,
+                       team_games: set) -> dict[str, set]:
+    """Classify a team's games into the four availability cells for a pair.
+
+    ``a_games`` / ``b_games`` are the game IDs each player appeared in;
+    ``team_games`` is every game the team played. Returns the 2x2 partition:
+    ``both`` / ``a_only`` / ``b_only`` / ``neither``. Player game IDs outside
+    ``team_games`` (e.g. games for another franchise) are ignored, so the
+    four cells always partition ``team_games`` exactly.
+    """
+    a = set(a_games) & set(team_games)
+    b = set(b_games) & set(team_games)
+    return {
+        "both": a & b,
+        "a_only": a - b,
+        "b_only": b - a,
+        "neither": set(team_games) - a - b,
+    }
+
+
 def on_off_table(on_off_raw: pd.DataFrame, player_name: str | None = None) -> pd.DataFrame:
     """Tidy the TeamPlayerOnOffDetails stack into on-minus-off deltas per player."""
     df = on_off_raw.copy()

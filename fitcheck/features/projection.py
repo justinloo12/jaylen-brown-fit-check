@@ -60,6 +60,29 @@ def shrink_gap(gap: float, low: float = 0.4, high: float = 0.6) -> tuple[float, 
     return lo, hi
 
 
+def wilson_interval(successes: float, n: float,
+                    z: float = 1.96) -> tuple[float, float]:
+    """Wilson score interval for a binomial proportion (default 95%).
+
+    Used to put honest error bars on small-sample win percentages (e.g. the
+    16-game Tatum-only cell). Preferred over the normal approximation because
+    it behaves at small n and near 0/1. Returns (low, high) as fractions.
+    """
+    if n <= 0:
+        return (float("nan"), float("nan"))
+    p = successes / n
+    z2 = z * z
+    denom = 1.0 + z2 / n
+    center = (p + z2 / (2.0 * n)) / denom
+    half = (z / denom) * ((p * (1.0 - p) / n + z2 / (4.0 * n * n)) ** 0.5)
+    return (max(0.0, center - half), min(1.0, center + half))
+
+
+def intervals_overlap(a: tuple[float, float], b: tuple[float, float]) -> bool:
+    """True if two (low, high) intervals share any point."""
+    return a[0] <= b[1] and b[0] <= a[1]
+
+
 def ts_after_usage_shift(ts0: float, usg0: float, usg1: float,
                          slope_per_usg_pt: float) -> float:
     """Project TS% (fraction) after a usage change.

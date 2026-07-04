@@ -38,10 +38,12 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 from fitcheck import config
 from fitcheck.data import nba_client as nba
-from fitcheck.features.onoff import pair_configuration_split
-from fitcheck.features.projection import (net_to_wins, possessions,
-                                          shrink_gap, true_shooting,
-                                          ts_after_usage_shift, usage_rate)
+from fitcheck.features.onoff import (availability_cells,
+                                     pair_configuration_split)
+from fitcheck.features.projection import (intervals_overlap, net_to_wins,
+                                          possessions, shrink_gap,
+                                          true_shooting, ts_after_usage_shift,
+                                          usage_rate, wilson_interval)
 
 TATUM = config.CELTICS_ROTATION["Jayson Tatum"]
 BROWN = config.SUBJECT_ID
@@ -105,9 +107,10 @@ def game_matrix(season: str) -> tuple[pd.DataFrame, dict]:
     t_logs = nba.player_gamelogs(TATUM, season)
     b_logs = nba.player_gamelogs(BROWN, season)
     tm = nba.team_gamelogs(config.CELTICS_TEAM_ID, season)
-    tg, bg, ag = set(t_logs["GAME_ID"]), set(b_logs["GAME_ID"]), set(tm["GAME_ID"])
-    cells = {"both": tg & bg, "tatum_only": tg - bg,
-             "brown_only": bg - tg, "neither": ag - tg - bg}
+    raw = availability_cells(set(t_logs["GAME_ID"]), set(b_logs["GAME_ID"]),
+                             set(tm["GAME_ID"]))
+    cells = {"both": raw["both"], "tatum_only": raw["a_only"],
+             "brown_only": raw["b_only"], "neither": raw["neither"]}
 
     rows = [{"season": season, "cell": k, **team_cell(tm, gids)}
             for k, gids in cells.items()]
@@ -118,6 +121,255 @@ def game_matrix(season: str) -> tuple[pd.DataFrame, dict]:
         "brown_only": player_cell_line(b_logs, tm, cells["brown_only"]),
     }
     return pd.DataFrame(rows), lines
+
+
+# ---------------------------------------------------------------------------
+# Observed layer 1b: pooled availability split, 2023-24 -> 2025-26
+# ---------------------------------------------------------------------------
+POOL_LABEL = "pooled"                # all POOL_SEASONS
+POOL_EX_LABEL = "pooled_ex_2025-26"  # sensitivity: drop the Tatum injury year
+
+
+def _avail_row(label: str, cells: dict[str, set], tm: pd.DataFrame,
+               t_logs: pd.DataFrame) -> dict:
+    """One flat row of the availability table: cell counts, team results in
+    the both-played and Tatum-only cells, and Tatum's line in each."""
+    both, only = team_cell(tm, cells["both"]), team_cell(tm, cells["tatum_only"])
+    row = {"pool": label,
+           "n_both": both["n"], "n_tatum_only": only["n"],
+           "n_brown_only": len(cells["brown_only"]),
+           "n_neither": len(cells["neither"]),
+           "both_w": both["w"], "both_l": both["l"],
+           "both_margin": both["margin"],
+           "only_w": only["w"], "only_l": only["l"],
+           "only_margin": only["margin"]}
+    for tag, line in (("tb", player_cell_line(t_logs, tm, cells["both"])),
+                      ("to", player_cell_line(t_logs, tm, cells["tatum_only"]))):
+        for k in ("pts", "reb", "ast", "ts", "usg"):
+            row[f"{tag}_{k}"] = line[k] if line else np.nan
+    return row
+
+
+def pooled_availability() -> pd.DataFrame:
+    """Per-season availability rows over config.POOL_SEASONS plus two pooled
+    rows: the full window and the window minus 2025-26 (Tatum injury year).
+
+    One player-gamelog call per star per season and one team-gamelog call per
+    season, all cache-backed. GAME_IDs are unique across seasons, so pooling
+    is a straight union of the per-season cell sets over concatenated logs.
+    """
+    rows, t_frames, tm_frames = [], [], []
+    season_cells: dict[str, dict[str, set]] = {}
+    for s in config.POOL_SEASONS:
+        t_logs = nba.player_gamelogs(TATUM, s)
+        b_logs = nba.player_gamelogs(BROWN, s)
+        tm = nba.team_gamelogs(config.CELTICS_TEAM_ID, s)
+        raw = availability_cells(set(t_logs["GAME_ID"]),
+                                 set(b_logs["GAME_ID"]), set(tm["GAME_ID"]))
+        cells = {"both": raw["both"], "tatum_only": raw["a_only"],
+                 "brown_only": raw["b_only"], "neither": raw["neither"]}
+        season_cells[s] = cells
+        t_frames.append(t_logs)
+        tm_frames.append(tm)
+        rows.append(_avail_row(s, cells, tm, t_logs))
+
+    t_all = pd.concat(t_frames, ignore_index=True)
+    tm_all = pd.concat(tm_frames, ignore_index=True)
+    pools = {POOL_LABEL: list(config.POOL_SEASONS),
+             POOL_EX_LABEL: [s for s in config.POOL_SEASONS if s != "2025-26"]}
+    for label, subset in pools.items():
+        merged = {k: set().union(*(season_cells[s][k] for s in subset))
+                  for k in ("both", "tatum_only", "brown_only", "neither")}
+        rows.append(_avail_row(label, merged, tm_all, t_all))
+    return pd.DataFrame(rows)
+
+
+def _career_figure(cdf: pd.DataFrame) -> None:
+    """Small companion figure: both-played vs Tatum-only average margin per
+    season, plus the pooled window. ~2.4 aspect, kept deliberately plain."""
+    p = cdf.set_index("pool")
+    labels = list(config.POOL_SEASONS) + [POOL_LABEL]
+    disp = [f"{s}\nboth {p.loc[s, 'n_both']:.0f} g / "
+            f"solo {p.loc[s, 'n_tatum_only']:.0f} g" for s in labels[:-1]]
+    disp.append(f"Pooled 3 seasons\nboth {p.loc[POOL_LABEL, 'n_both']:.0f} g / "
+                f"solo {p.loc[POOL_LABEL, 'n_tatum_only']:.0f} g")
+
+    fig, ax = plt.subplots(figsize=(13.2, 5.5))
+    x, w = np.arange(len(labels)), 0.36
+    b1 = ax.bar(x - w / 2, [p.loc[s, "both_margin"] for s in labels], w,
+                color=GREY, label="Both played")
+    b2 = ax.bar(x + w / 2, [p.loc[s, "only_margin"] for s in labels], w,
+                color=GREEN, label="Tatum played, Brown sat")
+    for bars in (b1, b2):
+        for rect in bars:
+            h = rect.get_height()
+            if not np.isnan(h):
+                ax.annotate(f"{h:+.1f}",
+                            (rect.get_x() + rect.get_width() / 2, h),
+                            textcoords="offset points", xytext=(0, 5),
+                            ha="center", fontsize=13, fontweight="bold")
+    ax.axvline(len(labels) - 1.5, color=DARK, lw=0.8, ls="--", alpha=0.5)
+    ax.set_xticks(x)
+    ax.set_xticklabels(disp, fontsize=11.5)
+    ax.set_ylabel("Average game margin (points)", fontsize=12.5)
+    ax.set_title("Boston with vs without Brown when Tatum played — "
+                 "2023-24 → 2025-26 (current-system window)",
+                 fontsize=14, fontweight="bold", loc="left")
+    ax.axhline(0, color="black", lw=0.9)
+    ax.legend(fontsize=11.5, loc="upper left")
+    ax.margins(y=0.25)
+    ax.tick_params(axis="y", labelsize=11)
+    fig.text(0.005, -0.03,
+             "Solo cells are small and Brown's absences are not random "
+             "(injury/rest scheduling); see memo §1b before quoting.",
+             fontsize=10, style="italic", color=DARK)
+    fig.tight_layout()
+    out = config.FIG_DIR / "career_availability.png"
+    fig.savefig(out, dpi=155, bbox_inches="tight")
+    plt.close(fig)
+    print(f"  ✓ figure -> {out}")
+
+
+def _fmt_avail(r: pd.Series, side: str) -> str:
+    n = r[f"n_{'both' if side == 'both' else 'tatum_only'}"]
+    if n == 0:
+        return "— (0 g)"
+    pre = "both" if side == "both" else "only"
+    return (f"{r[f'{pre}_w']:.0f}-{r[f'{pre}_l']:.0f} ({n:.0f} g), "
+            f"margin {r[f'{pre}_margin']:+.1f}")
+
+
+def _fmt_tatum(r: pd.Series, tag: str) -> str:
+    if np.isnan(r[f"{tag}_pts"]):
+        return "—"
+    return (f"{r[f'{tag}_pts']:.1f} / {r[f'{tag}_reb']:.1f} / "
+            f"{r[f'{tag}_ast']:.1f}, TS {r[f'{tag}_ts']:.3f}, "
+            f"USG {r[f'{tag}_usg']:.1f}%")
+
+
+def _career_section(cdf: pd.DataFrame) -> list[str]:
+    """Memo lines for §1b: per-season table, pooled results, Wilson check."""
+    p = cdf.set_index("pool")
+    full, ex = p.loc[POOL_LABEL], p.loc[POOL_EX_LABEL]
+    wl_b = wilson_interval(full["both_w"], full["n_both"])
+    wl_o = wilson_interval(full["only_w"], full["n_tatum_only"])
+    overlap = intervals_overlap(wl_b, wl_o)
+    pct = lambda w, n: w / n if n else float("nan")
+
+    L = [
+        "",
+        "### 1b. The pooled sample — the same split across the "
+        "current-system window (2023-24 → 2025-26)",
+        "",
+        "_The 16-game cell above is the right sample for \"current Tatum,\" "
+        "but it is still 16 games. Pooling the identical split across the "
+        "three Mazzulla-era seasons roughly doubles it. The window is "
+        "deliberately 2023-24 → 2025-26: this is the current system "
+        "(the movement-3 identity) with Tatum as the established first "
+        "option. Earlier Tatum-Brown seasons (2017-2022) are excluded on "
+        "purpose — Kyrie/Kemba/Hayward-era rosters gave both players "
+        "different roles, so pooling them would answer a different question "
+        "than the one this memo asks._",
+        "",
+        "| Season | Both played | Tatum played, Brown sat "
+        "| Tatum line, Brown sat |",
+        "|---|---|---|---|",
+    ]
+    for s in config.POOL_SEASONS:
+        r = p.loc[s]
+        L.append(f"| {s} | {_fmt_avail(r, 'both')} "
+                 f"| {_fmt_avail(r, 'only')} | {_fmt_tatum(r, 'to')} |")
+    L += [
+        f"| **Pooled** | **{_fmt_avail(full, 'both')}** "
+        f"| **{_fmt_avail(full, 'only')}** | **{_fmt_tatum(full, 'to')}** |",
+        f"| Pooled ex-2025-26 (injury year) | {_fmt_avail(ex, 'both')} "
+        f"| {_fmt_avail(ex, 'only')} | {_fmt_tatum(ex, 'to')} |",
+        "",
+        f"All four cells over the window: both played {full['n_both']:.0f}, "
+        f"Tatum only {full['n_tatum_only']:.0f}, Brown only "
+        f"{full['n_brown_only']:.0f}, neither {full['n_neither']:.0f}. "
+        "(The Brown-only and neither cells are analyzed season-by-season "
+        "in §1; they are listed here only so the counts reconcile.)",
+        "",
+        f"**Tatum, pooled:** with Brown {_fmt_tatum(full, 'tb')} over "
+        f"{full['n_both']:.0f} games; with Brown sitting "
+        f"{_fmt_tatum(full, 'to')} over {full['n_tatum_only']:.0f} games — "
+        f"usage +{full['to_usg'] - full['tb_usg']:.1f} points with TS "
+        f"{full['tb_ts']:.3f} → {full['to_ts']:.3f}"
+        + (", i.e. at pooled scale the extra load carries a real (if "
+           "modest) efficiency cost that the flat 2024-25 cell alone "
+           "hid — print that, it cuts against the thesis"
+           if full["tb_ts"] - full["to_ts"] > 0.01 else
+           " — efficiency essentially held at the higher load")
+        + ". ([career_availability.csv]"
+        "(../data/processed/career_availability.csv) has every row.)",
+        "",
+        "**Significance, honestly.** Wilson 95% intervals on win%: "
+        f"both played {pct(full['both_w'], full['n_both']):.3f} "
+        f"[{wl_b[0]:.3f}, {wl_b[1]:.3f}] on {full['n_both']:.0f} games; "
+        f"Tatum-only {pct(full['only_w'], full['n_tatum_only']):.3f} "
+        f"[{wl_o[0]:.3f}, {wl_o[1]:.3f}] on {full['n_tatum_only']:.0f} "
+        "games. The intervals "
+        + ("**overlap substantially** — the pooled sample is consistent "
+           "with \"Boston is at least as good in Tatum-only games\" but "
+           "cannot statistically separate the two cells. Treat the direction "
+           "as suggestive, not proven."
+           if overlap else
+           "**do not overlap** — a genuinely surprising result for samples "
+           "this size; even so, availability splits are observational and "
+           "this is not a causal estimate.")
+        + f" The margin gap ({full['only_margin']:+.1f} vs "
+        f"{full['both_margin']:+.1f}) is likewise within the noise a "
+        f"{full['n_tatum_only']:.0f}-game cell carries.",
+        "",
+    ]
+    worse = [s for s in config.POOL_SEASONS
+             if p.loc[s, "n_tatum_only"] > 0
+             and p.loc[s, "only_margin"] < p.loc[s, "both_margin"]]
+    if worse:
+        L += ["**Rows that cut the other way, printed with the same "
+              "weight:** " +
+              "; ".join(
+                  f"in {s} Boston's margin was *worse* with Brown out "
+                  f"({p.loc[s, 'only_margin']:+.1f} over "
+                  f"{p.loc[s, 'n_tatum_only']:.0f} games vs "
+                  f"{p.loc[s, 'both_margin']:+.1f} together)" for s in worse)
+              + ". The pooled number must not be quoted without these rows.",
+              ""]
+    else:
+        L += ["Every season in the window points the same direction "
+              "(Tatum-only margin ≥ both-played margin) — but see the "
+              "sample sizes above before treating that as more than "
+              "consistency.", ""]
+    L += [
+        "**Caveats that stay attached to this table:**",
+        "",
+        "- **Absences are not missing-at-random.** Brown's sit-outs cluster "
+        "in injury stretches and scheduled-rest games, whose opponent "
+        "quality and context can differ systematically from the both-played "
+        "slate. Nothing here controls for opponent strength.",
+        f"- **2025-26 is an injury shard.** Tatum played 16 games, so the "
+        f"Tatum-only cell that year is {p.loc['2025-26', 'n_tatum_only']:.0f} "
+        "games — reported because the brief is to report the n whatever it "
+        "is, not because it moves the pool.",
+        "- **Windowing is a choice.** Restricting to 2023-24 → 2025-26 "
+        "makes the sample role-consistent at the cost of size; the "
+        "ex-2025-26 row shows the pool is not carried by the injury season.",
+        "",
+        f"**What this adds to the conclusion:** the 2024-25 Tatum-only "
+        "story survives pooling — "
+        f"{full['only_w']:.0f}-{full['only_l']:.0f} "
+        f"({pct(full['only_w'], full['n_tatum_only']):.0%}) with a "
+        f"{full['only_margin']:+.1f} margin across "
+        f"{full['n_tatum_only']:.0f} games vs "
+        f"{pct(full['both_w'], full['n_both']):.0%} and "
+        f"{full['both_margin']:+.1f} together — but the Wilson check above "
+        "caps the claim at *\"no evidence Boston drops off when Tatum plays "
+        "without Brown, in the current system\"*. It does not upgrade the "
+        "sole-first-option case from suggestive to proven, and this memo "
+        "doesn't pretend it does.",
+    ]
+    return L
 
 
 # ---------------------------------------------------------------------------
@@ -315,7 +567,7 @@ def _line(d: dict | None) -> str:
 
 
 def _write(gm: dict[str, pd.DataFrame], lines: dict[str, dict],
-           lu: dict[str, pd.DataFrame], proj: dict) -> None:
+           lu: dict[str, pd.DataFrame], proj: dict, cdf: pd.DataFrame) -> None:
     g24 = gm["2024-25"].set_index("cell")
     g25 = gm["2025-26"].set_index("cell")
     l24 = lu["2024-25"].set_index("state")
@@ -332,7 +584,9 @@ def _write(gm: dict[str, pd.DataFrame], lines: dict[str, dict],
         "rather than Tatum+Brown load-sharing? §1-§2 are **observed**; §3 is "
         "a **projection** and says so at every step. 2024-25 is the primary "
         "season throughout — Tatum's 2025-26 lasted 16 games (injury), so "
-        "every 2025-26 cell involving him is a shard, not evidence._",
+        "every 2025-26 cell involving him is a shard, not evidence. §1b "
+        "pools the availability split across the 2023-24 → 2025-26 window "
+        "to put the 16-game cell on a larger sample._",
         "",
         "## 1. Observed — the game-level 2x2 (who suited up)",
         "",
@@ -392,6 +646,9 @@ def _write(gm: dict[str, pd.DataFrame], lines: dict[str, dict],
         f"({g25.loc['neither', 'n']:.0f} games, "
         f"{g25.loc['neither', 'net']:+.1f}) is small and blowout-flavored; "
         "don't quote it as a supporting-cast measurement.",
+    ]
+    L += _career_section(cdf)
+    L += [
         "",
         "## 2. Observed — the lineup-level 2x2 (who was on the floor)",
         "",
@@ -550,6 +807,13 @@ def _write(gm: dict[str, pd.DataFrame], lines: dict[str, dict],
         "slope, wins-per-point) live at the top of "
         "`scripts/16_tatum_first_option.py`; the pure formulas are "
         "unit-tested in `tests/test_projection.py`.",
+        "- §1b pooling: one player-gamelog call per star per season plus "
+        "one team-gamelog call per season over `config.POOL_SEASONS`; "
+        "cells classified by `availability_cells` "
+        "(`fitcheck/features/onoff.py`), win% intervals from "
+        "`wilson_interval` (`fitcheck/features/projection.py`) — both "
+        "unit-tested. Margin = team PLUS_MINUS from the team game log "
+        "(final-score margin), averaged per cell.",
     ]
     out = config.OUTPUT_DIR / "tatum_first_option.md"
     out.write_text("\n".join(L), encoding="utf-8")
@@ -575,14 +839,25 @@ def main() -> int:
     pd.concat(lu_rows, ignore_index=True).to_csv(
         config.PROCESSED_DIR / "tatum_first_option_lineups.csv", index=False)
 
+    cdf = pooled_availability()
+    cdf.to_csv(config.PROCESSED_DIR / "career_availability.csv", index=False)
+    full = cdf.set_index("pool").loc[POOL_LABEL]
+    print(f"  ✓ pooled {config.POOL_SEASONS[0]}..{config.POOL_SEASONS[-1]}: "
+          f"Tatum-only {full['only_w']:.0f}-{full['only_l']:.0f} "
+          f"({full['n_tatum_only']:.0f} g, margin {full['only_margin']:+.1f}) "
+          f"| both {full['both_w']:.0f}-{full['both_l']:.0f} "
+          f"({full['n_both']:.0f} g, margin {full['both_margin']:+.1f})")
+
     proj = build_projection(lu["2024-25"], lines["2024-25"])
     print(f"  ✓ projection: lineup gap {proj['gap']:+.2f} -> team net "
           f"{proj['net_lo']:+.1f}..{proj['net_hi']:+.1f} -> "
           f"{proj['wins_lo']:+.1f}..{proj['wins_hi']:+.1f} wins")
 
     _figure(lu["2024-25"], lines["2024-25"])
-    _write(gm, lines, lu, proj)
-    print("Done. outputs/tatum_first_option.md + figures/tatum_first_option.png")
+    _career_figure(cdf)
+    _write(gm, lines, lu, proj, cdf)
+    print("Done. outputs/tatum_first_option.md + figures/tatum_first_option.png"
+          " + figures/career_availability.png")
     return 0
 
 

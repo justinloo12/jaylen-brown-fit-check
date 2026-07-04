@@ -27,6 +27,13 @@ for _d in (RAW_DIR, PROCESSED_DIR, CACHE_DIR, OUTPUT_DIR, FIG_DIR):
 SEASONS = ["2024-25", "2025-26"]
 SEASON_TYPE = "Regular Season"
 
+# Window for the pooled availability split in script 16: the Mazzulla-era
+# seasons with the current system (movement-3 identity) and Tatum as the
+# established first option. Earlier Tatum-Brown seasons are deliberately
+# excluded — 2017-2022 mixes in Kyrie/Kemba/Hayward-era roles and would
+# answer a different question. The deep-dive analyses stay on SEASONS above.
+POOL_SEASONS = ["2023-24", "2024-25", "2025-26"]
+
 # ---------------------------------------------------------------------------
 # Teams
 # ---------------------------------------------------------------------------

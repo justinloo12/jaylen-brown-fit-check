@@ -6,12 +6,14 @@ import unittest
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 
 from fitcheck.features.projection import (
+    intervals_overlap,
     net_to_wins,
     possessions,
     shrink_gap,
     true_shooting,
     ts_after_usage_shift,
     usage_rate,
+    wilson_interval,
 )
 
 
@@ -66,6 +68,49 @@ class TestShrinkGap(unittest.TestCase):
         self.assertLess(lo, hi)
         self.assertAlmostEqual(lo, -2.58)
         self.assertAlmostEqual(hi, -1.72)
+
+
+class TestWilsonInterval(unittest.TestCase):
+    def test_known_value(self):
+        # Classic reference case: 8/10 at z=1.96 -> (0.4902, 0.9433).
+        lo, hi = wilson_interval(8, 10)
+        self.assertAlmostEqual(lo, 0.4902, places=4)
+        self.assertAlmostEqual(hi, 0.9433, places=4)
+
+    def test_contains_point_estimate(self):
+        lo, hi = wilson_interval(13, 16)
+        self.assertLess(lo, 13 / 16)
+        self.assertGreater(hi, 13 / 16)
+
+    def test_bounded_at_extremes(self):
+        lo, hi = wilson_interval(0, 5)
+        self.assertAlmostEqual(lo, 0.0)
+        self.assertGreater(hi, 0.0)
+        lo, hi = wilson_interval(5, 5)
+        self.assertLess(lo, 1.0)
+        self.assertAlmostEqual(hi, 1.0)
+
+    def test_narrows_with_n(self):
+        small = wilson_interval(8, 10)
+        big = wilson_interval(80, 100)
+        self.assertLess(big[1] - big[0], small[1] - small[0])
+
+    def test_zero_n_is_nan(self):
+        lo, hi = wilson_interval(0, 0)
+        self.assertNotEqual(lo, lo)
+        self.assertNotEqual(hi, hi)
+
+
+class TestIntervalsOverlap(unittest.TestCase):
+    def test_overlapping(self):
+        self.assertTrue(intervals_overlap((0.5, 0.8), (0.7, 0.9)))
+
+    def test_touching_counts_as_overlap(self):
+        self.assertTrue(intervals_overlap((0.5, 0.7), (0.7, 0.9)))
+
+    def test_disjoint(self):
+        self.assertFalse(intervals_overlap((0.1, 0.3), (0.4, 0.6)))
+        self.assertFalse(intervals_overlap((0.4, 0.6), (0.1, 0.3)))
 
 
 class TestTsAfterUsageShift(unittest.TestCase):

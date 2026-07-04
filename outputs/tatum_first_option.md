@@ -1,6 +1,6 @@
 # Tatum as Sole First Option — The Configuration Matrix and a Season Projection
 
-_Follow-up to [tatum_vs_brown.md](tatum_vs_brown.md). Question: is this roster's best configuration Tatum as the lone first option rather than Tatum+Brown load-sharing? §1-§2 are **observed**; §3 is a **projection** and says so at every step. 2024-25 is the primary season throughout — Tatum's 2025-26 lasted 16 games (injury), so every 2025-26 cell involving him is a shard, not evidence._
+_Follow-up to [tatum_vs_brown.md](tatum_vs_brown.md). Question: is this roster's best configuration Tatum as the lone first option rather than Tatum+Brown load-sharing? §1-§2 are **observed**; §3 is a **projection** and says so at every step. 2024-25 is the primary season throughout — Tatum's 2025-26 lasted 16 games (injury), so every 2025-26 cell involving him is a shard, not evidence. §1b pools the availability split across the 2023-24 → 2025-26 window to put the 16-game cell on a larger sample._
 
 ## 1. Observed — the game-level 2x2 (who suited up)
 
@@ -34,6 +34,34 @@ Per-game lines in each star's cells (PTS / REB / AST):
 | **Tatum sat** | 36-22 (58 g), net +5.7 | 7-1 (8 g), net +19.2 |
 
 Brown carried the season alone: 58 games without Tatum at 28.9 / 7.2 / 5.1, TS 0.568, USG 36.7% — a 36-22 record and +5.7 net. That is real, MVP-ballot-grade solo production and this memo doesn't pretend otherwise. The Tatum-sat-and-Brown-sat cell (8 games, +19.2) is small and blowout-flavored; don't quote it as a supporting-cast measurement.
+
+### 1b. The pooled sample — the same split across the current-system window (2023-24 → 2025-26)
+
+_The 16-game cell above is the right sample for "current Tatum," but it is still 16 games. Pooling the identical split across the three Mazzulla-era seasons roughly doubles it. The window is deliberately 2023-24 → 2025-26: this is the current system (the movement-3 identity) with Tatum as the established first option. Earlier Tatum-Brown seasons (2017-2022) are excluded on purpose — Kyrie/Kemba/Hayward-era rosters gave both players different roles, so pooling them would answer a different question than the one this memo asks._
+
+| Season | Both played | Tatum played, Brown sat | Tatum line, Brown sat |
+|---|---|---|---|
+| 2023-24 | 47-17 (64 g), margin +9.5 | 10-0 (10 g), margin +18.3 | 26.9 / 7.4 / 6.1, TS 0.571, USG 33.8% |
+| 2024-25 | 40-16 (56 g), margin +8.1 | 13-3 (16 g), margin +11.6 | 28.8 / 7.8 / 5.1, TS 0.584, USG 34.5% |
+| 2025-26 | 11-2 (13 g), margin +10.9 | 2-1 (3 g), margin +5.3 | 27.3 / 10.0 / 7.0, TS 0.512, USG 38.3% |
+| **Pooled** | **98-35 (133 g), margin +9.1** | **25-4 (29 g), margin +13.3** | **28.0 / 7.9 / 5.7, TS 0.572, USG 34.6%** |
+| Pooled ex-2025-26 (injury year) | 87-33 (120 g), margin +8.9 | 23-3 (26 g), margin +14.2 | 28.0 / 7.6 / 5.5, TS 0.579, USG 34.2% |
+
+All four cells over the window: both played 133, Tatum only 29, Brown only 71, neither 13. (The Brown-only and neither cells are analyzed season-by-season in §1; they are listed here only so the counts reconcile.)
+
+**Tatum, pooled:** with Brown 26.0 / 8.7 / 5.4, TS 0.593, USG 29.9% over 133 games; with Brown sitting 28.0 / 7.9 / 5.7, TS 0.572, USG 34.6% over 29 games — usage +4.7 points with TS 0.593 → 0.572, i.e. at pooled scale the extra load carries a real (if modest) efficiency cost that the flat 2024-25 cell alone hid — print that, it cuts against the thesis. ([career_availability.csv](../data/processed/career_availability.csv) has every row.)
+
+**Significance, honestly.** Wilson 95% intervals on win%: both played 0.737 [0.656, 0.804] on 133 games; Tatum-only 0.862 [0.694, 0.945] on 29 games. The intervals **overlap substantially** — the pooled sample is consistent with "Boston is at least as good in Tatum-only games" but cannot statistically separate the two cells. Treat the direction as suggestive, not proven. The margin gap (+13.3 vs +9.1) is likewise within the noise a 29-game cell carries.
+
+**Rows that cut the other way, printed with the same weight:** in 2025-26 Boston's margin was *worse* with Brown out (+5.3 over 3 games vs +10.9 together). The pooled number must not be quoted without these rows.
+
+**Caveats that stay attached to this table:**
+
+- **Absences are not missing-at-random.** Brown's sit-outs cluster in injury stretches and scheduled-rest games, whose opponent quality and context can differ systematically from the both-played slate. Nothing here controls for opponent strength.
+- **2025-26 is an injury shard.** Tatum played 16 games, so the Tatum-only cell that year is 3 games — reported because the brief is to report the n whatever it is, not because it moves the pool.
+- **Windowing is a choice.** Restricting to 2023-24 → 2025-26 makes the sample role-consistent at the cost of size; the ex-2025-26 row shows the pool is not carried by the injury season.
+
+**What this adds to the conclusion:** the 2024-25 Tatum-only story survives pooling — 25-4 (86%) with a +13.3 margin across 29 games vs 74% and +9.1 together — but the Wilson check above caps the claim at *"no evidence Boston drops off when Tatum plays without Brown, in the current system"*. It does not upgrade the sole-first-option case from suggestive to proven, and this memo doesn't pretend it does.
 
 ## 2. Observed — the lineup-level 2x2 (who was on the floor)
 
@@ -115,3 +143,4 @@ Clutch: Brown's 2024-25 clutch TS was .632, better than Tatum (outputs/high_leve
 - Per-game USG% computed from the standard boxscore formula (player totals over team totals in the same games), not from the advanced-boxscore endpoint — avoids ~150 extra API calls; the two agree to a few tenths.
 - TS% aggregated over cells (total PTS over total true-shot attempts), not averaged per game.
 - All projection constants (shrinkage band, usage range, TS slope, wins-per-point) live at the top of `scripts/16_tatum_first_option.py`; the pure formulas are unit-tested in `tests/test_projection.py`.
+- §1b pooling: one player-gamelog call per star per season plus one team-gamelog call per season over `config.POOL_SEASONS`; cells classified by `availability_cells` (`fitcheck/features/onoff.py`), win% intervals from `wilson_interval` (`fitcheck/features/projection.py`) — both unit-tested. Margin = team PLUS_MINUS from the team game log (final-score margin), averaged per cell.

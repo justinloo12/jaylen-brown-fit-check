@@ -8,7 +8,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
 import numpy as np
 import pandas as pd
 
-from fitcheck.features.onoff import (parse_lineup_ids,
+from fitcheck.features.onoff import (availability_cells,
+                                     parse_lineup_ids,
                                      pair_configuration_split,
                                      with_without_split)
 
@@ -88,6 +89,35 @@ class TestPairConfigurationSplit(unittest.TestCase):
     def test_missing_cell_is_nan_row(self):
         out = pair_configuration_split(_lineups(), SUBJ, MATE).set_index("state")
         self.assertTrue(np.isnan(out.loc["neither", "NET_RATING"]))
+
+
+class TestAvailabilityCells(unittest.TestCase):
+    TEAM = {"g1", "g2", "g3", "g4", "g5"}
+
+    def test_partition(self):
+        cells = availability_cells({"g1", "g2", "g3"}, {"g1", "g4"}, self.TEAM)
+        self.assertEqual(cells["both"], {"g1"})
+        self.assertEqual(cells["a_only"], {"g2", "g3"})
+        self.assertEqual(cells["b_only"], {"g4"})
+        self.assertEqual(cells["neither"], {"g5"})
+
+    def test_cells_partition_team_games_exactly(self):
+        cells = availability_cells({"g1", "g2"}, {"g2", "g3"}, self.TEAM)
+        union = set().union(*cells.values())
+        self.assertEqual(union, self.TEAM)
+        self.assertEqual(sum(len(c) for c in cells.values()), len(self.TEAM))
+
+    def test_other_franchise_games_ignored(self):
+        # Player game IDs outside the team slate (e.g. pre-trade games)
+        # must not leak into any cell.
+        cells = availability_cells({"g1", "xx"}, {"yy"}, self.TEAM)
+        self.assertEqual(cells["a_only"], {"g1"})
+        self.assertEqual(cells["b_only"], set())
+        self.assertEqual(cells["neither"], {"g2", "g3", "g4", "g5"})
+
+    def test_empty_team_slate(self):
+        cells = availability_cells({"g1"}, {"g2"}, set())
+        self.assertTrue(all(len(c) == 0 for c in cells.values()))
 
 
 if __name__ == "__main__":
