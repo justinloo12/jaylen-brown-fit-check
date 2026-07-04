@@ -247,6 +247,45 @@ def player_gamelogs(player_id: int, season: str, *,
                              "st": season_type}, force=force)
 
 
+def team_gamelogs(team_id: int, season: str, *,
+                  season_type: str = "Regular Season",
+                  force: bool = False) -> pd.DataFrame:
+    """Per-game team box scores (W/L, PTS, FGA, FTA, OREB, TOV, PLUS_MINUS).
+
+    Used to (a) join Tatum's game logs against team totals for the standard
+    usage formula and (b) compute team record / per-game margin in
+    games-with vs games-without splits."""
+    def _fetch() -> pd.DataFrame:
+        from nba_api.stats.endpoints import teamgamelogs
+        return _get(
+            teamgamelogs.TeamGameLogs,
+            team_id_nullable=team_id,
+            season_nullable=season,
+            season_type_nullable=season_type,
+        )
+    return cached_df("team_gamelogs", _fetch,
+                     params={"team_id": team_id, "season": season,
+                             "st": season_type}, force=force)
+
+
+def play_by_play(game_id: str, *, force: bool = False) -> pd.DataFrame:
+    """Full PlayByPlayV3 event stream for one game (turnover classification,
+    points-off-turnover walks). V2 no longer serves recent seasons. Heaviest
+    pull in the project: one call per game — always cached, standard pacing
+    applies."""
+    def _fetch() -> pd.DataFrame:
+        from nba_api.stats.endpoints import playbyplayv3
+        df = _get(playbyplayv3.PlayByPlayV3, game_id=game_id)
+        # Parquet chokes on mixed object columns; normalize the text ones.
+        for c in ["scoreHome", "scoreAway", "description", "actionType",
+                  "subType", "clock", "shotResult", "location"]:
+            if c in df:
+                df[c] = df[c].astype("string")
+        return df
+    return cached_df("play_by_play", _fetch, params={"game_id": game_id},
+                     force=force)
+
+
 def team_records(season: str, *, force: bool = False) -> pd.DataFrame:
     """Team W/L (to compute opponent win% for 'vs good teams' splits)."""
     def _fetch() -> pd.DataFrame:
@@ -291,6 +330,59 @@ def player_shot_defend(player_id: int, season: str, *, team_id: int = 0,
         )
     return cached_df("player_shot_defend", _fetch,
                      params={"player_id": player_id, "season": season},
+                     force=force)
+
+
+def season_matchups(def_player_id: int, season: str, *,
+                    force: bool = False) -> pd.DataFrame:
+    """Season matchup totals with this player as the DEFENDER: one row per
+    offensive player he guarded (partial possessions, points allowed,
+    matchup FG%, matchup TOV) — the on-ball defense lens."""
+    def _fetch() -> pd.DataFrame:
+        from nba_api.stats.endpoints import leagueseasonmatchups
+        return _get(
+            leagueseasonmatchups.LeagueSeasonMatchups,
+            def_player_id_nullable=def_player_id,
+            season=season,
+            season_type_playoffs=config.SEASON_TYPE,
+        )
+    return cached_df("season_matchups", _fetch,
+                     params={"def_player_id": def_player_id, "season": season},
+                     force=force)
+
+
+def league_hustle(season: str, *, force: bool = False) -> pd.DataFrame:
+    """League hustle tracking totals (deflections, loose balls, charges,
+    contested shots, box-outs) — the off-ball activity lens."""
+    def _fetch() -> pd.DataFrame:
+        from nba_api.stats.endpoints import leaguehustlestatsplayer
+        return _get(
+            leaguehustlestatsplayer.LeagueHustleStatsPlayer,
+            season=season,
+            season_type_all_star=config.SEASON_TYPE,
+            per_mode_time="Totals",
+        )
+    return cached_df("league_hustle", _fetch, params={"season": season},
+                     force=force)
+
+
+def synergy_playtype(season: str, *, play_type: str, grouping: str = "defensive",
+                     force: bool = False) -> pd.DataFrame:
+    """Synergy play-type table (league-wide, player rows). Not all seasons /
+    types are served — callers should catch exceptions and skip gracefully."""
+    def _fetch() -> pd.DataFrame:
+        from nba_api.stats.endpoints import synergyplaytypes
+        return _get(
+            synergyplaytypes.SynergyPlayTypes,
+            season=season,
+            season_type_all_star=config.SEASON_TYPE,
+            play_type_nullable=play_type,
+            type_grouping_nullable=grouping,
+            player_or_team_abbreviation="P",
+            per_mode_simple="Totals",
+        )
+    return cached_df("synergy_playtype", _fetch,
+                     params={"season": season, "pt": play_type, "g": grouping},
                      force=force)
 
 

@@ -62,6 +62,17 @@ document:
   clutch/playoff/vs-.500+ splits and the 2028 cap reload
 - [outputs/tatum_vs_brown.md](outputs/tatum_vs_brown.md) — post-trade
   baseline: the offense Boston kept, same metrics, no special treatment
+- [outputs/tatum_first_option.md](outputs/tatum_first_option.md) — the full
+  2×2 configuration matrix (games and lineups, "neither" as control) and a
+  clearly-labeled projection of Tatum as sole first option, with documented
+  shrinkage and ranges
+- [outputs/live_ball_turnovers.md](outputs/live_ball_turnovers.md) — every
+  Brown/Tatum turnover classified live vs dead from full play-by-play, and
+  the opponent points each live one surrendered (Brown's rate was *lower*
+  than Tatum's when both were healthy — printed plainly)
+- [outputs/defense_roles.md](outputs/defense_roles.md) — what Boston lost
+  defensively, split on-ball (matchup difficulty: Brown took the #1-option
+  assignments) vs off-ball (hustle/rebounding), with P&R and transition cuts
 - [outputs/efficiency_comps.md](outputs/efficiency_comps.md) — Brown vs the
   20-player max-contract market: TS% vs usage vs pay
 - [outputs/flow_test.md](outputs/flow_test.md) — the ball-stopping claim,
@@ -120,7 +131,11 @@ scripts/                      # the pipeline, in order
 ├── 11_tatum_baseline.py      # post-trade: Tatum through the same lens
 ├── 12_efficiency_comps.py    # Brown vs the max-contract market (TS%/USG/pay)
 ├── 13_flow_test.py           # ball-stopping measured: sec/touch, passes/touch
-└── 14_defense_check.py       # 'declining defense' tested 3 ways — refuted
+├── 14_defense_check.py       # 'declining defense' tested 3 ways — refuted
+├── 15_build_pptx_deck.py     # the case as a PowerPoint deck
+├── 16_tatum_first_option.py  # 2×2 configuration matrix + solo-Tatum projection
+├── 17_live_ball_turnovers.py # live-ball TOs priced from full play-by-play
+└── 18_defense_roles.py       # defense by role: matchups, hustle, P&R, transition
 
 tests/                        # unit tests (stdlib unittest)
 notebooks/                    # exploration

@@ -39,3 +39,4 @@ Boston defended ~5–6 points/100 better with Brown off. But single-player defen
 - **'Declining defense' is refuted** in the 2024-25 → 2025-26 window; if anything the trend is up.
 - The honest defensive statement: Brown was never an elite defender by box metrics (career DBPM ≈ 0), 2024-25 was a soft year (neutral matchup numbers), and 2025-26 was genuinely good.
 - **Implication for the trade case: leave defense out of it.** It is closer to a point in Brown's favor — he defended well while carrying 35% usage. The case stands on flow, shot selection, price, and the return; hanging it on defense hands the other side an easy kill.
+- **Follow-up:** [defense_roles.md](defense_roles.md) splits this into on-ball vs off-ball roles (matchup difficulty, hustle tracking, P&R and transition cuts) — the post-trade question of what kind of defender Boston has to replace.

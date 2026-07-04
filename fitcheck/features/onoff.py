@@ -56,6 +56,46 @@ def with_without_split(lineups: pd.DataFrame, subject_id: int,
     return out.reset_index()
 
 
+def pair_configuration_split(lineups: pd.DataFrame, a_id: int,
+                             b_id: int) -> pd.DataFrame:
+    """Full 2x2 lineup configuration matrix for a pair of players.
+
+    Splits ALL of a team's 5-man lineups into four cells — both on the
+    floor, only A, only B, neither — and returns one row per cell with
+    aggregated MIN and minute-weighted OFF/DEF/NET rating. The "neither"
+    cell is the control group: it shows what the supporting cast does with
+    no member of the pair on the floor.
+
+    Same caveat as :func:`with_without_split`: minute-weighting across
+    lineups approximates the possession-weighted figure.
+    """
+    df = lineups.copy()
+    ids = df["GROUP_ID"].apply(parse_lineup_ids)
+    has_a = ids.apply(lambda s: a_id in s).to_numpy()
+    has_b = ids.apply(lambda s: b_id in s).to_numpy()
+    df["state"] = np.select(
+        [has_a & has_b, has_a & ~has_b, ~has_a & has_b],
+        ["both", "a_only", "b_only"], default="neither")
+
+    def _agg(g: pd.DataFrame) -> pd.Series:
+        w = g["MIN"].astype(float)
+        tot = w.sum()
+        wm = lambda col: float((g[col].astype(float) * w).sum() / tot) if tot else np.nan
+        return pd.Series({
+            "MIN": tot,
+            "OFF_RATING": wm("OFF_RATING"),
+            "DEF_RATING": wm("DEF_RATING"),
+            "NET_RATING": wm("NET_RATING"),
+            "n_lineups": len(g),
+        })
+
+    out = df.groupby("state", group_keys=False).apply(_agg, include_groups=False)
+    out = out.reindex(["both", "a_only", "b_only", "neither"])
+    total_min = out["MIN"].sum()
+    out["min_share"] = out["MIN"] / total_min if total_min else np.nan
+    return out.reset_index()
+
+
 def on_off_table(on_off_raw: pd.DataFrame, player_name: str | None = None) -> pd.DataFrame:
     """Tidy the TeamPlayerOnOffDetails stack into on-minus-off deltas per player."""
     df = on_off_raw.copy()

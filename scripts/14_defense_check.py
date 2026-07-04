@@ -222,6 +222,10 @@ def _write(arc: pd.DataFrame, mu: pd.DataFrame, oo: pd.DataFrame) -> None:
         "closer to a point in Brown's favor — he defended well while carrying "
         "35% usage. The case stands on flow, shot selection, price, and the "
         "return; hanging it on defense hands the other side an easy kill.",
+        "- **Follow-up:** [defense_roles.md](defense_roles.md) splits this "
+        "into on-ball vs off-ball roles (matchup difficulty, hustle "
+        "tracking, P&R and transition cuts) — the post-trade question of "
+        "what kind of defender Boston has to replace.",
     ]
     (config.OUTPUT_DIR / "defense_check.md").write_text("\n".join(L),
                                                         encoding="utf-8")
