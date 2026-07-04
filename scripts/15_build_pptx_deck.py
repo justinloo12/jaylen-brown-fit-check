@@ -242,7 +242,46 @@ txt(s, tx, yy + 0.05, 5.2, 0.6, [[("A $53M player whose value is contingent "
     "bold": True, "size": 13, "color": GREEN})]], line_spacing=1.05)
 footer(s)
 
-# ---------------------------------------------------------------- 5 CONTRACT
+# ---------------------------------------------------------------- 5 HIERARCHY
+s = new()
+eyebrow(s, "The hierarchy test")
+title(s, "Tatum-led was the best version of the offense — together was the worst")
+engine = [("+11.9", "Tatum-led (Brown off)", "1,212 min · 2024-25", GREEN),
+          ("+9.8", "Brown-led (Tatum off)", "753 min · 2024-25", DARK),
+          ("+7.6", "the two together", "1,411 min · 2024-25", RED)]
+cw, gap = 3.83, 0.31
+for i, (big, lab, sub, col) in enumerate(engine):
+    x = 0.62 + i * (cw + gap)
+    card(s, x, 1.95, cw, 2.25)
+    txt(s, x + 0.28, 2.16, cw - 0.5, 0.9, [[(big, {"size": 42, "bold": True,
+        "font": HEAD, "color": col})]], space_after=0)
+    txt(s, x + 0.3, 3.1, cw - 0.55, 0.4, [[(lab, {"size": 14.5, "bold": True,
+        "color": DARK})]], space_after=0)
+    txt(s, x + 0.3, 3.47, cw - 0.55, 0.4, [[(sub, {"size": 12,
+        "color": MUTED})]], space_after=0)
+txt(s, 0.62, 4.55, 12.1, 0.4, [[("Net rating of five-man lineups, the healthy "
+    "season — first-option basketball beat load-sharing.", {"size": 13.5,
+    "bold": True, "color": DARK})]], space_after=0)
+rows5 = [("Tatum's diet IS the system", GREEN,
+          "Half his shots are threes (0.498 vs Brown's 0.262) and his "
+          "long-two rate is 0.059 vs Brown's 0.142. His self-creation "
+          "terminates in the anchor shot; Brown's terminated in the shot "
+          "the system avoids."),
+         ("Read the caveats before quoting", GOLD,
+          "'Led' minutes include bench-heavy and garbage-time units, and "
+          "2025-26 is an injury-season shard (204 Tatum-led minutes). The "
+          "2024-25 comparison is the clean one — and it still favors the "
+          "hierarchy.")]
+yy = 5.15
+for head, col, body in rows5:
+    dot(s, 0.7, yy + 0.04, 0.16, fill=col)
+    txt(s, 1.02, yy, 11.6, 0.85, [[(head + "  ", {"bold": True, "size": 13.5,
+        "color": DARK}), (body, {"size": 12.5, "color": MUTED})]],
+        line_spacing=1.08, space_after=2)
+    yy += 0.92
+footer(s)
+
+# ---------------------------------------------------------------- 6 CONTRACT
 s = new()
 eyebrow(s, "The contract")
 title(s, "Max-contract price, below-median-efficiency production")
