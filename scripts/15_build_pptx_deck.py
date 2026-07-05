@@ -150,9 +150,9 @@ txt(s, 0.62, 2.15, 12.1, 2.0, [
 ], space_after=2, line_spacing=1.0)
 txt(s, 0.62, 4.35, 11.6, 1.0, [[(
     "On July 1, 2026 Boston traded Brown to Philadelphia for Paul George and "
-    "picks. This is the audit, built the day after: a neutral scorecard, the "
-    "strongest evidence-based case for the trade, and every counter-argument "
-    "we could find.",
+    "picks. This is a breakdown on why the trade might not be all bad news "
+    "for Boston. In the world of \"that boy tuff\" and analytical basketball, "
+    "this is a Celtics fan's version of this trade.",
     {"size": 17, "color": "CFE0D6"})]], line_spacing=1.12)
 txt(s, 0.62, 6.6, 12, 0.4, [[("Numbers, not takes · nba_api + Basketball-"
     "Reference · unit-tested pipeline", {"color": "8FA89B", "size": 12,
@@ -161,7 +161,8 @@ txt(s, 0.62, 6.6, 12, 0.4, [[("Numbers, not takes · nba_api + Basketball-"
 # ---------------------------------------------------------------- 2 SETUP
 s = new()
 eyebrow(s, "The setup")
-title(s, "A $53M wing, a movement-3 system, and a real trade to audit")
+title(s, "A $53M wing that shoots long twos, and a live or die by the "
+         "three pointer system", size=27)
 stats = [("34.4%", "of the salary cap", "$53.1M in 2025-26 — over a third of "
           "the sheet on one wing"),
          ("+16%", "worse shot diet, YoY", "bad-shot index 0.328 → 0.379 — "
@@ -179,13 +180,11 @@ for i, (big, lab, sub) in enumerate(stats):
     txt(s, x + 0.3, 3.66, cw - 0.55, 0.7, [[(sub, {"size": 12.5,
         "color": MUTED})]], line_spacing=1.05)
 txt(s, 0.62, 4.75, 12.1, 1.4, [
-    [("Boston's edge was a movement-3 offense with five connected players. ",
+    [("Boston's edge is shooting more threes than opponents. ",
       {"bold": True, "color": INK, "size": 15}),
      ("The question this deck answers with data: did Brown's game pull with "
-      "that identity or against it — and was the return worth it? ",
-      {"color": INK, "size": 15}),
-     ("Every chart comes from a reproducible, unit-tested pipeline.",
-      {"bold": True, "color": GREEN, "size": 15})],
+      "that identity or against it, and was the return worth it?",
+      {"color": INK, "size": 15})],
 ], line_spacing=1.2)
 footer(s)
 
@@ -203,7 +202,7 @@ rows = [("Fewer threes, doubled long twos", RED,
          "bailouts (0.18 → 0.22)."),
         ("No tough-shot premium", GREEN,
          "The xFG model (2,661 shots) scores his shot-making at expectation "
-         "— ≈ +0.000 both years. The difficulty is self-inflicted.")]
+         "— ≈ 0 both years. The difficulty is self-inflicted.")]
 yy = 1.95
 for head, col, body in rows:
     dot(s, tx, yy + 0.04, 0.16, fill=col)
@@ -211,49 +210,45 @@ for head, col, body in rows:
         "color": DARK})], [(body, {"size": 12.3, "color": MUTED})]],
         line_spacing=1.06, space_after=2)
     yy += 1.32
-txt(s, 0.62, 6.1, 12.1, 0.75, [[("This is the cleanest, least-confounded "
-    "number in the file: ", {"size": 14, "color": INK}),
-    ("the possession-termination profile trended away from the identity, "
-     "with no shot-making bailout.", {"size": 14, "bold": True,
-     "color": DARK})]], line_spacing=1.1)
+txt(s, 0.62, 6.1, 12.1, 0.75, [[("Brown's own shot selection drifted far "
+    "away from what the system is built on, ", {"size": 14, "color": INK}),
+    ("and his \"tough\" shot making isn't good enough to excuse it.",
+     {"size": 14, "bold": True, "color": DARK})]], line_spacing=1.1)
 footer(s)
 
 # ---------------------------------------------------------------- 4 GAME PLAN
 s = new()
 eyebrow(s, "The game plan")
-title(s, "Boston's identity is math — and Brown was its one outlier")
+title(s, "Boston's identity is math and Brown ruins it")
 image(s, "identity", 0.7, 1.7, 11.9, 4.35)
 txt(s, 0.62, 6.05, 12.1, 1.0, [
     [("#1 · #1 · #4 in three-point volume and a top-2 offense all three "
-      "years — threes returned 1.10 points per shot vs 0.97 for twos. ",
+      "years. Threes returned 1.10 points per shot vs 0.97 for twos. ",
       {"size": 13, "color": INK}),
      ("Brown: last of 7 perimeter players in 3PT rate (.263 vs team .467), "
       "first in long twos. ", {"size": 13, "bold": True, "color": RED}),
-     ("A shot-mix problem, not a finishing one (his 1.046 PPS vs 1.101) — "
-      "and honestly priced, swapping his diet for George's is roughly a "
-      "wash after creation and aging discounts. The offense case supports; "
-      "it doesn't headline.", {"size": 13, "color": MUTED})],
+     ("A shot-mix problem, not a finishing one (his 1.046 PPS vs 1.101).",
+      {"size": 13, "color": MUTED})],
 ], line_spacing=1.15)
 footer(s)
 
 # ---------------------------------------------------------------- 5 SHOTS GO
 s = new()
 eyebrow(s, "Where the shots go")
-title(s, "Redistribute Brown's 21.7 shots to the wings — priced honestly")
+title(s, "Redistribute Brown's 21.7 shots to the wings")
 image(s, "redis", 0.9, 1.7, 11.5, 4.3)
 txt(s, 0.62, 6.0, 12.1, 1.05, [
     [("Ceiling: +1.3 pts/g (~3.5 wins) if every wing's efficiency survived "
       "the extra volume — it won't. ", {"size": 13, "bold": True,
       "color": GREEN}),
      ("Usage-adjusted: roughly a wash (−0.7 to +0.9 wins). And the George-"
-      "only 1-for-1 is negative — spreading beats concentrating. ",
+      "only 1-for-1 is negative for the Celtics. ",
       {"size": 13, "color": INK}),
-     ("The real upside isn't in this mechanical model — it's Tatum's "
-      "creation (5.7-6.1 ast, .498 3PT-rate gravity) upgrading the shots "
-      "these wings get, and that effect is already measured in the +11.9 "
-      "Tatum-led lineups. Combined honest range: ~+4 to +8 wins — the "
-      "projections overlap and do NOT stack.", {"size": 13, "bold": True,
-      "color": DARK})],
+     ("The real upside is Tatum's creation (5.7-6.1 ast, .498 3PT-rate "
+      "gravity) upgrading the shots these wings get, and that effect is "
+      "already measured in the +11.9 Tatum-led lineups. Combined honest "
+      "range: ~+4 to +8 wins (without Brown this year).", {"size": 13,
+      "bold": True, "color": DARK})],
 ], line_spacing=1.15)
 footer(s)
 
@@ -288,7 +283,7 @@ footer(s)
 # ---------------------------------------------------------------- 5 HIERARCHY
 s = new()
 eyebrow(s, "The hierarchy test")
-title(s, "First-option Tatum beat load-sharing — on the floor and in the standings")
+title(s, "First-option Tatum will be a problem (in a good way)")
 image(s, "solo", 0.5, 1.7, 7.4, 3.2)
 tx = 8.3
 rows5 = [("25-4 (86.2%) when Brown sat", GREEN,
@@ -301,7 +296,7 @@ rows5 = [("25-4 (86.2%) when Brown sat", GREEN,
         ("Worth ~5-7 wins a season", GOLD,
          "Projection, not observation: the +4.3 lineup gap, shrunk 40-60% "
          "for bench/garbage contamination → +1.7-2.6 team net → +4.7-7.0 "
-         "wins. Assumptions documented in the memo.")]
+         "wins.")]
 yy = 1.9
 for head, col, body in rows5:
     dot(s, tx, yy + 0.04, 0.16, fill=col)
@@ -311,16 +306,8 @@ for head, col, body in rows5:
     yy += 1.44
 txt(s, 0.62, 5.05, 7.4, 1.3, [[("Tatum's projected solo season: ",
     {"size": 13, "color": INK}),
-    ("27.2-28.8 pts · 7.8-8.9 reb · 5.1-6.2 ast · .566-.584 TS ",
-     {"size": 13, "bold": True, "color": GREEN}),
-    ("— stated as a range from the observed 16-game sample and a documented "
-     "usage-tradeoff model, because false precision is how decks lie.",
-     {"size": 13, "color": MUTED})]], line_spacing=1.12)
-txt(s, 0.62, 6.55, 12.1, 0.45, [[("Honesty flags: Wilson intervals on the "
-    "win rates overlap — claim is 'no evidence of drop-off,' not proof. And "
-    "Brown's own 7-game solo cell was the matrix's best (6-1, +15.8). See "
-    "slide 10.", {"size": 11.5, "italic": True, "color": MUTED})]],
-    line_spacing=1.05)
+    ("27.2-28.8 pts · 7.8-8.9 reb · 5.1-6.2 ast · .566-.584 TS",
+     {"size": 13, "bold": True, "color": GREEN})]], line_spacing=1.12)
 footer(s)
 
 # ---------------------------------------------------------------- 6 CONTRACT
@@ -329,7 +316,7 @@ eyebrow(s, "The contract")
 title(s, "Max-contract price, below-median-efficiency production")
 image(s, "eff", 1.2, 1.65, 10.9, 4.55)
 txt(s, 0.62, 6.35, 12.1, 0.7, [[("6.9 WS on $53.1M = $7.7M per win share at "
-    "34% of the cap, with a 0.573 TS% — below the max-wing median. ",
+    "34% of the cap, with a 0.573 TS%, below the max-wing median. ",
     {"size": 14, "color": INK}),
     ("Picks 15-30 buy the same wins at ~$2.1M/WS on rookie deals.",
      {"size": 14, "bold": True, "color": GREEN})]], line_spacing=1.1)
@@ -338,7 +325,7 @@ footer(s)
 # ---------------------------------------------------------------- 6 RETURN
 s = new()
 eyebrow(s, "The return")
-title(s, "George is the cleaner stylistic fit — and the picks are the point")
+title(s, "George is the cleaner fit for the Celtics system, and new lottery odds", size=28)
 comp = [("3PT rate", "0.262", "0.497"),
         ("Catch-&-shoot rate", "0.163", "0.409"),
         ("Iso / 3+ dribble rate", "0.639", "0.404"),
@@ -361,7 +348,7 @@ for lab, jb, pg in comp:
         "color": GREEN})]], space_after=0)
     yy += 0.6
 txt(s, 0.94, 5.62, 6.6, 0.5, [[("George takes the shots the system is "
-    "built to generate — he plugs in instead of stopping it.",
+    "built to generate. He plugs in instead of stopping it.",
     {"size": 11.5, "italic": True, "color": MUTED})]], line_spacing=1.05)
 card(s, 8.15, 1.95, 4.55, 4.35, fill=DARK, line=None)
 txt(s, 8.45, 2.2, 4.0, 0.4, [[("PLUS THE PICKS", {"size": 12.5, "bold": True,
@@ -372,8 +359,8 @@ txt(s, 8.45, 2.7, 4.0, 1.0, [
     [("unprotected first", {"size": 20, "bold": True, "font": HEAD,
       "color": WHITE})]], space_after=2, line_spacing=1.05)
 txt(s, 8.45, 3.85, 4.0, 1.6, [
-    [("Under the post-2019 flattened lottery — exact odds enumerated across "
-      "all 24,024 seed permutations — late-lottery firsts convey materially "
+    [("Under the post-2019 flattened lottery exact odds enumerated across "
+      "all 24,024 seed permutations, late-lottery firsts convey materially "
       "more top-4 equity than the old system.", {"size": 12.5,
       "color": "CFE0D6"})]], line_spacing=1.15)
 txt(s, 8.45, 5.55, 4.0, 0.6, [[("Cheap, controllable, tradeable — the assets "
@@ -406,10 +393,12 @@ for i, (head, col, body) in enumerate(weak):
         "font": HEAD, "color": DARK})]], space_after=0)
     txt(s, x + 0.3, 3.5, cw - 0.55, 1.7, [[(body, {"size": 12.8,
         "color": MUTED})]], line_spacing=1.12)
-txt(s, 0.62, 5.7, 12.1, 0.6, [[("An argument that can't survive its own "
-    "counter-evidence isn't worth presenting. ", {"size": 14, "bold": True,
-    "color": DARK}), ("Every brief in this project ships with its weakest "
-    "points attached.", {"size": 14, "color": MUTED})]], line_spacing=1.1)
+txt(s, 0.62, 5.7, 12.1, 0.9, [[("Brown as an individual is a remarkable "
+    "basketball player, there is no denying that. ", {"size": 14,
+    "bold": True, "color": DARK}), ("But he was just an expensive player "
+    "that didn't quite fit what the Celtics are trying to do. The data says "
+    "the best version of this team was always Tatum at the top.",
+    {"size": 14, "color": MUTED})]], line_spacing=1.1)
 footer(s)
 
 # ---------------------------------------------------------------- 8 CLOSER
@@ -432,11 +421,6 @@ for head, body in lines:
         "font": HEAD, "color": WHITE}), (body, {"size": 15,
         "color": "CFE0D6"})]], line_spacing=1.1, space_after=2)
     yy += 1.35
-txt(s, 1.05, 6.15, 11.4, 0.8, [[("Honesty note: ", {"bold": True,
-    "size": 12.5, "color": "8FA89B"}), ("this deck argues Boston's side on "
-    "purpose; the neutral scorecard, the Tatum-injury confound, and the "
-    "media's pro-Philadelphia consensus are all documented in the repo.",
-    {"size": 12.5, "color": "8FA89B", "italic": True})]], line_spacing=1.12)
 
 prs.save(str(OUT))
 print(f"wrote {OUT} ({len(prs.slides._sldIdLst)} slides)")

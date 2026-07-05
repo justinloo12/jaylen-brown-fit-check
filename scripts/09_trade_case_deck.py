@@ -157,9 +157,9 @@ def main() -> int:
   <div class="kicker">A Data Audit &middot; July 2026</div>
   <h1>Breaking Down the Jaylen&nbsp;Brown Trade</h1>
   <p class="dek">On July 1, 2026, Boston traded Brown to Philadelphia for
-  Paul George and picks. This is the audit, built the day after: a neutral
-  scorecard, the strongest evidence-based case for the trade, and every
-  counter-argument we could find.</p>
+  Paul George and picks. This is a breakdown on why the trade might not be
+  all bad news for Boston. In the world of &ldquo;that boy tuff&rdquo; and
+  analytical basketball, this is a Celtics fan's version of this trade.</p>
   <div class="herostats">
     <div><div class="num">25&ndash;4</div><div class="lab">When Brown sat, 2023&ndash;present</div></div>
     <div><div class="num">34.4%</div><div class="lab">Of the salary cap</div></div>
@@ -171,17 +171,17 @@ def main() -> int:
 
 <section>
   <div class="slug">01 &mdash; The Setup</div>
-  <h2>A $53M wing, a movement-3 system, and a real trade to audit</h2>
+  <h2>A $53M wing that shoots long twos, and a live or die by the three
+  pointer system</h2>
   <p>Brown's $53.1M salary in 2025-26 was <b>34.4% of the cap</b> &mdash; over
   a third of the sheet on one wing. Over the same stretch his shot diet got
   <span class="neg">16% worse</span> year over year (bad-shot index 0.328
   &rarr; 0.379), drifting away from the system. In return Boston received
   <b>four assets</b>: Paul George, a 2028 first, a 2031 unprotected first,
   and two seconds.</p>
-  <p>Boston's edge was a movement-3 offense with five connected players. The
-  question this audit answers with data: did Brown's game pull with that
-  identity or against it &mdash; and was the return worth it? Every chart
-  comes from a reproducible, unit-tested pipeline.</p>
+  <p>Boston's edge is shooting more threes than opponents. The question this
+  breakdown answers with data: did Brown's game pull with that identity or
+  against it, and was the return worth it?</p>
 </section>
 
 <hr class="rule">
@@ -196,44 +196,41 @@ def main() -> int:
   late-clock bailouts (0.18 &rarr; 0.22).</p>
   {figs['diet']}
   <p><b>And there was no tough-shot premium.</b> The xFG model (2,661 shots)
-  scores his shot-making at expectation &mdash; &asymp; +0.000 both years.
-  The difficulty was self-inflicted. This is the cleanest, least-confounded
-  number in the file: the possession-termination profile trended away from
-  the identity, with no shot-making bailout.</p>
+  scores his shot-making at expectation &mdash; &asymp; 0 both years.
+  The difficulty was self-inflicted. Brown's own shot selection drifted far
+  away from what the system is built on, and his &ldquo;tough&rdquo; shot
+  making isn't good enough to excuse it.</p>
 </section>
 
 <hr class="rule">
 
 <section>
   <div class="slug">03 &mdash; The Game Plan</div>
-  <h2>Boston's identity is math &mdash; and Brown was its one outlier</h2>
+  <h2>Boston's identity is math and Brown ruins it</h2>
   <p>Boston finished <b>#1, #1, and #4 in three-point volume</b> with a
   top-2 offense all three years &mdash; threes returned 1.10 points per shot
   vs 0.97 for twos. Brown was <span class="neg">last of 7 perimeter players
   in 3PT rate (.263 vs the team's .467)</span> and first in long twos.</p>
   {figs['identity']}
   <p>It was a shot-mix problem, not a finishing one &mdash; his 1.046 points
-  per shot vs the team's 1.101. And priced honestly, swapping his diet for
-  George's is roughly a wash after creation and aging discounts. The offense
-  case supports; it doesn't headline.</p>
+  per shot vs the team's 1.101.</p>
 </section>
 
 <hr class="rule">
 
 <section>
   <div class="slug">04 &mdash; Where the Shots Go</div>
-  <h2>Redistribute Brown's 21.7 shots to the wings &mdash; priced honestly</h2>
+  <h2>Redistribute Brown's 21.7 shots to the wings</h2>
   <p>The ceiling: <span class="pos">+1.3 pts/g (~3.5 wins)</span> if every
   wing's efficiency survived the extra volume &mdash; it won't.
   Usage-adjusted, the mechanical redistribution is roughly a wash
   (&minus;0.7 to +0.9 wins). And the George-only 1-for-1 is
-  <span class="neg">negative</span> &mdash; spreading beats concentrating.</p>
+  <span class="neg">negative for the Celtics</span>.</p>
   {figs['redis']}
-  <p>The real upside isn't in this mechanical model &mdash; it's Tatum's
-  creation (5.7&ndash;6.1 assists, .498 3PT-rate gravity) upgrading the shots
-  these wings get, and that effect is already measured in the +11.9 Tatum-led
-  lineups. Combined honest range: <b>+4 to +8 wins</b> &mdash; the
-  projections overlap and do not stack.</p>
+  <p>The real upside is Tatum's creation (5.7&ndash;6.1 assists, .498
+  3PT-rate gravity) upgrading the shots these wings get, and that effect is
+  already measured in the +11.9 Tatum-led lineups. Combined honest range:
+  <b>+4 to +8 wins</b> (without Brown this year).</p>
 </section>
 
 <hr class="rule">
@@ -258,8 +255,7 @@ def main() -> int:
 
 <section>
   <div class="slug">06 &mdash; The Hierarchy Test</div>
-  <h2>First-option Tatum beat load-sharing &mdash; on the floor and in the
-  standings</h2>
+  <h2>First-option Tatum will be a problem (in a good way)</h2>
   <div class="bignum"><div class="n">25&ndash;4</div>
   <div class="c">Boston's record when Brown sat, 2023&ndash;present: 86.2%,
   +13.3 per game across 29 games &mdash; including 10&ndash;0 in the title
@@ -274,13 +270,8 @@ def main() -> int:
   for bench and garbage-time contamination, comes to +1.7&ndash;2.6 team net
   &mdash; worth <b>~5&ndash;7 wins a season</b>. Tatum's projected solo line:
   27.2&ndash;28.8 pts, 7.8&ndash;8.9 reb, 5.1&ndash;6.2 ast, .566&ndash;.584
-  TS &mdash; stated as a range from the observed 16-game sample and a
-  documented usage-tradeoff model, because false precision is how decks lie.</p>
+  TS.</p>
   {figs['avail']}
-  <p class="aside">Honesty flags: Wilson intervals on the win rates overlap
-  &mdash; the claim is &ldquo;no evidence of drop-off,&rdquo; not proof. And
-  Brown's own 7-game solo cell was the matrix's best (6&ndash;1, +15.8). See
-  section 09.</p>
 </section>
 
 <hr class="rule">
@@ -290,7 +281,7 @@ def main() -> int:
   <h2>Max-contract price, below-median-efficiency production</h2>
   <div class="bignum"><div class="n down">$7.7M</div>
   <div class="c">Per win share: 6.9 WS on $53.1M at 34% of the cap, with a
-  .573 TS% &mdash; below the max-wing median.</div></div>
+  .573 TS%, below the max-wing median.</div></div>
   {figs['eff']}
   <p>Picks 15&ndash;30 buy the same wins at <span class="pos">~$2.1M per win
   share</span> on rookie deals.</p>
@@ -300,17 +291,17 @@ def main() -> int:
 
 <section>
   <div class="slug">08 &mdash; The Return</div>
-  <h2>George is the cleaner stylistic fit &mdash; and the picks are the
-  point</h2>
+  <h2>George is the cleaner fit for the Celtics system, and new lottery
+  odds</h2>
   <table>
     <tr><th>2025-26 shot profile</th><th>Brown</th><th>George</th></tr>
     {comp_rows}
   </table>
-  <p>George takes the shots the system is built to generate &mdash; he plugs
+  <p>George takes the shots the system is built to generate. He plugs
   in instead of stopping it.</p>
   <p><b>Plus the picks: a 2028 first and a 2031 unprotected first.</b> Under
-  the post-2019 flattened lottery &mdash; exact odds enumerated across all
-  <b>24,024 seed permutations</b> &mdash; late-lottery firsts convey
+  the post-2019 flattened lottery exact odds enumerated across all
+  <b>24,024 seed permutations</b>, late-lottery firsts convey
   materially more top-4 equity than the old system gave them. Cheap,
   controllable, tradeable: the assets a capped-out roster can't otherwise
   get.</p>
@@ -333,9 +324,10 @@ def main() -> int:
   turnover rate (<b>1.75 per 36</b>) was lower than Tatum's (1.84) in
   2024-25. That angle exonerates him &mdash; and the media consensus graded
   the trade for Philadelphia.</p>
-  <p>An argument that can't survive its own counter-evidence isn't worth
-  presenting. Every brief in this project ships with its weakest points
-  attached.</p>
+  <p><b>Brown as an individual is a remarkable basketball player, there is
+  no denying that.</b> But he was just an expensive player that didn't quite
+  fit what the Celtics are trying to do. The data says the best version of
+  this team was always Tatum at the top.</p>
 </section>
 
 </div>
@@ -351,9 +343,6 @@ def main() -> int:
   <h3>The return buys identity and optionality.</h3>
   <p>George takes the system's shots; two firsts add the cheap, controllable
   assets a capped roster can't otherwise acquire.</p>
-  <p class="aside">Honesty note: this deck argues Boston's side on purpose;
-  the neutral scorecard, the Tatum-injury confound, and the media's
-  pro-Philadelphia consensus are all documented in the repo.</p>
 </div></div>
 
 <footer>Fit Check &middot; Jaylen Brown trade audit &middot; built from a
